@@ -1,5 +1,6 @@
 import { getChannels } from "./auth.js"
 import { toggleBarMain } from "./decoration.js"
+import { signPage } from "./sign.js"
 let page = document.querySelector(".page")
 async function renderCloneVideoPage() {
     page.innerHTML = `
@@ -88,6 +89,7 @@ async function renderVideoPage(idChannel, idVideo) {
                  </div> -->
             </div>
         </div>
+        <div class="appearDiv"></div>
     `
     // Render video
     let filmsChoice = document.querySelector(".filmsChoice")
@@ -121,8 +123,10 @@ async function renderVideoPage(idChannel, idVideo) {
         item.addEventListener('click', (event) => {
             renderCloneVideoPage();
             renderVideoPage(item.getAttribute("data-channelId"), item.getAttribute("data-videoId"));
+            toggleBarMain()
         });
     });
+
 }
 async function renderCloneHomePage() {
     page.innerHTML = `
@@ -420,7 +424,36 @@ async function renderHomePage() {
         });
     });
 }
+async function renderLogPage() {
+    let body = document.querySelector("body")
+    body.innerHTML = `
+   <div class="container-fluid bg-secondary d-flex-center" style="height: 800px;">
+    <div class="container p-10 sm:p-5 bor-input"
+        style="width: 500px; height: 650px; background-color: rgba(255, 255, 255, 0.856);">
+        <h1 class="text-center mt-0 sm:mt-4 welcome">Welcome back</h1>
+        <div class="w-full flex justify-center items-center my-3">
+            <i class="fa-solid fa-layer-group text-8xl homeSign"></i>
+        </div>
+        <h4 class="text-center sign">Sign in to your account</h4>
+        <h5 class="mt-5 emailNone">Email Address</h5>
+        <input type="text" placeholder="Your Email" class="w-full p-3 border bor-input inputSign inputNone">
+        <p class="errorEmail" style="color:red"></p>
+        <h3 style="color:red"></h3>
+        <h5 class="mt-3 pass">Password</h5>
+        <input type="password" placeholder="Your Password" class="w-full p-3 border bor-input inputSign inputPass">
+        <p class="errorPassword" style="color:red"></p>
+        <h3 style="color:red"></h3>
+        <div class="flex justify-between w-full">
+            <p class="m-0 cursor-pointer remember text-red-600">Remember me</p>
+            <a class="text-blue-600 cursor-pointer signUpForm">Don't have account?</a>
+        </div>
+        <div class="w-full bg-yellow-500 text-center p-3 border bor-input flex justify-center items-center cursor-pointer btn">Sign in</div>
+    </div>
+</div>
 
-export { renderVideoPage, renderCloneHomePage, renderHomePage, renderCloneVideoPage }
+    `
+    signPage()
+}
+export { renderVideoPage, renderCloneHomePage, renderHomePage, renderCloneVideoPage, renderLogPage }
 
 
