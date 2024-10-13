@@ -5,14 +5,15 @@ import { renderCloneHomePage, renderHomePage, renderLogPage, renderVideoPage } f
 let page = document.querySelector(".page")
 renderCloneHomePage()
 renderHomePage()
-
 function avatarMainPage() {
-    let symbol = document.querySelector(".symbol")
-    symbol.addEventListener("click", async () => {
-        renderCloneHomePage()
-        renderHomePage()
+    let symbol = document.querySelectorAll(".symbol")
+    for (let i = 0; i < symbol.length; i++) {
+        symbol[i].addEventListener("click", async () => {
+            renderCloneHomePage()
+            renderHomePage()
 
-    })
+        })
+    }
 }
 avatarMainPage()
 // Sign in and up in main page
@@ -99,3 +100,4 @@ function logOutMainPage() {
     })
 }
 logOutMainPage()
+export { avatarMainPage }

@@ -49,27 +49,31 @@ async function renderCloneVideoPage() {
 async function renderVideoPage(idChannel, idVideo) {
     let listChannels = await getChannels()
     page.innerHTML = `
-    <div class="content bg-black flex pt-[70px]" style="justify-content: space-around;">
+    <div class="content bg-black block pt-[70px] lg:flex" style="justify-content: space-around;">
             <div class="">
-                <div class="w-[946px] h-[530px] rounded-lg overflow-hidden">
+                <div class="lg:w-[90%] w-full rounded-lg overflow-hidden">
                     <img src="${listChannels[idChannel].videos[idVideo].img}"
                         class="bg-white object-cover object-center w-full h-full" alt="YouTube Thumbnail">
                 </div>
                 <h1 class="my-2 text-white text-[20px] font-semibold">${listChannels[idChannel].videos[idVideo].name}</h1>
-                <div class="flex items-center">
-                    <div class="h-[40px] w-[40px] rounded-full overflow-hidden me-3">
-                        <img src="" alt="YouTube Thumbnail">
+                <div class="block lg:flex items-center">
+                    <div class="flex">
+                        <div class="h-[40px] w-[40px] rounded-full overflow-hidden me-3">
+                            <img src="" alt="YouTube Thumbnail">
+                        </div>
+                        <div class="me-5">
+                            <h4 class="text-white">${listChannels[idChannel].name}</h4>
+                            <p class="text-[#9e9e9e]">${listChannels[idChannel].videos[idVideo].watcher} N người</p>
+                        </div>
                     </div>
-                    <div class="me-5">
-                        <h4 class="text-white">${listChannels[idChannel].name}</h4>
-                        <p class="text-[#9e9e9e]">${listChannels[idChannel].videos[idVideo].watcher} N người</p>
+                    <div class="flex lg:mt-0 mt-3">
+                        <button class="rounded-full bg-white p-3 me-5">Tham gia</button>
+                        <button class="rounded-full bg-[#323332] text-white p-3 flex-around">
+                            <i class="fa-regular fa-bell"></i>
+                            <p class="mx-4">Đã đăng ký</p>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
                     </div>
-                    <button class="rounded-full bg-white p-3 me-5">Tham gia</button>
-                    <button class="rounded-full bg-[#323332] text-white p-3 flex-around">
-                        <i class="fa-regular fa-bell"></i>
-                        <p class="mx-4">Đã đăng ký</p>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </button>
                 </div>
             </div>
             <div class="w-[426px] h-full filmsChoice">

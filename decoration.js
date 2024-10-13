@@ -1,3 +1,5 @@
+import { avatarMainPage } from "./function.js";
+
 const scrollbarDivs = document.querySelectorAll('.leftScroll');
 const leftScroll = document.querySelector(".leftScroll")
 scrollbarDivs.forEach(scrollbarDiv => {
@@ -34,7 +36,80 @@ function toggleBarMain(ToggleBar) {
 }
 toggleBarMain(ToggleBar)
 function ToggleBar(statusBar, check) {
-    if (document.querySelector(".leftScroll")) {
+    if (!document.querySelector(".leftScroll") || window.innerWidth < 768) {
+        let appearDiv = document.querySelector(".appearDiv")
+        appearDiv.innerHTML = `
+<div class="fixed inset-0 bg-black opacity-100 z-50 pointer-events-auto" style="background-color: rgba(0, 0, 0, 0.7);">
+    <!-- Phần thanh điều hướng trên cùng -->
+    <div class="bg-black flex-between px-3 h-[56px] w-[100%] fixed bg-black" style="z-index: 2;">
+        <div class="flex-between w-[140px] text-white">
+            <i class="fa-solid fa-bars h-[24px] w-[24px] rounded-full p-5 hover:bg-[#222222]" onclick="
+                const appearDiv = document.querySelector('.appearDiv');
+                appearDiv.innerHTML = ''; // Xóa nội dung
+            "></i>
+            <div class="flex-around h-[40px] w-[90px] symbol cursor-pointer">
+                <i class="fa-brands fa-youtube h-[40px] w-[40px] text-red-500 text-[27px] me-1"></i>
+                <h3 class="font-semibold ">Youtube</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phần menu bên trái -->
+    <div class="leftScroll opacity-100 px-3 fixed mt-[56px] h-[calc(100vh-56px)] overflow-y-auto pb-5 w-[240px] top-0" style="background-color: black; z-index: 1;">
+        <a href="index.html" class="firstSection text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full flex mt-3">
+            <i class="token fa-solid fa-house me-[30px]"></i>
+            <h5 class="main text-[16px] text-center mt-0 w-auto block">Trang chủ</h5>
+        </a>
+        <div class="firstSection text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full flex mt-3">
+            <i class="token fa-solid fa-film me-[30px]"></i>
+            <h5 class="main text-[16px] text-center mt-0">Shorts</h5>
+        </div>
+        <div class="firstSection text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full flex mt-3">
+            <i class="token fa-solid fa-layer-group me-[30px]"></i>
+            <h5 class="main text-[16px] text-center mt-0">Kênh đăng ký</h5>
+        </div>
+        <div class="hiddenDiv flex text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full block mt-3">
+            <i class="fa-solid fa-tv me-[30px]"></i>
+            <h5 class="main text-[16px] text-center mt-0">Bạn</h5>
+        </div>
+
+        <div class="hiddenBarBlock border-t-[1px] mt-4 border-[#3f3f3f] block">
+            <div class="text-white rounded-full flex items-center w-[100%] mt-3 overflow-hidden text-[18px] cursor-pointer px-3 hover:bg-[#222222]">
+                <h5>Bạn</h5>
+                <h5 class="ms-[20px]">></h5>
+            </div>
+            <div class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full">
+                <i class="fa-solid fa-id-card-clip me-[30px]"></i>
+                <h5>Kênh của bạn</h5>
+            </div>
+            <div class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full">
+                <i class="fa-solid fa-clock-rotate-left me-[30px]"></i>
+                <h5>Video đã xem</h5>
+            </div>
+            <div class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full">
+                <i class="fa-solid fa-list me-[30px]"></i>
+                <h5>Danh sách phát</h5>
+            </div>
+            <div class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full">
+                <i class="fa-solid fa-circle-play me-[30px]"></i>
+                <h5>Video của bạn</h5>
+            </div>
+            <div class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full">
+                <i class="fa-regular fa-clock me-[30px]"></i>
+                <h5>Xem sau</h5>
+            </div>
+            <div class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1 hover:bg-[#222222] rounded-full">
+                <i class="fa-regular fa-thumbs-up me-[30px]"></i>
+                <h5>Video đã thích</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+            `
+        avatarMainPage()
+    }
+    else {
         const leftScroll = document.querySelector(".leftScroll")
         const hiddenBarBlock = document.querySelectorAll(".hiddenBarBlock")
         const firstSection = document.querySelectorAll(".firstSection")
@@ -85,88 +160,6 @@ function ToggleBar(statusBar, check) {
 
             localStorage.setItem("statusBar", true);
         }
-    }
-    else {
-        let appearDiv = document.querySelector(".appearDiv")
-        appearDiv.innerHTML = `
-            <div class=" fixed inset-0 bg-black opacity-70 z-50 pointer-events-auto">
-            <div class="bg-black flex-between px-3 h-[56px] w-[100%] fixed bg-black " style="z-index: 1;">
-                <div class="flex-between w-[140px]  text-white ">
-                    <i class="fa-solid fa-bars h-[24px] w-[24px] rounded-full p-5 hover:bg-[#222222]" onclick="
-    const appearDiv = document.querySelector('.appearDiv');
-        appearDiv.innerHTML = ''; // Xóa nội dung
-"></i>
-                    <div class="flex-around h-[40px] w-[90px] symbol cursor-pointer">
-                        <i class="fa-brands fa-youtube h-[40px] w-[40px] text-red-500 text-[27px] me-1"></i>
-                        <h3 class="font-semibold ">Youtube</h3>
-                    </div>
-                </div>
-
-            </div>
-            <div
-                class="leftScroll bg-black xl:px-3 px-1 fixed mt-[56px] h-[calc(100vh-56px)] overflow-y-auto pb-5 xl:w-[240px] w-[90px] lg:block hidden fixed" style="z-index: 1;">
-                <a href="index.html"
-                    class="firstSection text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full xl:flex block xl:mt-3 mt-[30px]">
-                    <i class="token fa-solid fa-house xl:me-[30px]"></i>
-                    <h5 class="main xl:text-[16px] text-[10px] text-center xl:mt-0 mt-3 lg:w-auto w-full block">Trang
-                        chủ</h5>
-                </a>
-                <div
-                    class="firstSection text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full xl:flex block xl:mt-3 mt-[30px]">
-                    <i class="token fa-solid fa-film xl:me-[30px]"></i>
-                    <h5 class="main xl:text-[16px] text-[10px] text-center xl:mt-0 mt-3">Shorts</h5>
-                </div>
-                <div
-                    class="firstSection text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full xl:flex block xl:mt-3 mt-[30px]">
-                    <i class="token fa-solid fa-layer-group xl:me-[30px]"></i>
-                    <h5 class="main xl:text-[16px] text-[10px] text-center xl:mt-0 mt-3">Kênh đăng ký</h5>
-                </div>
-                <div
-                    class="hiddenDiv text-white items-center w-[100%] overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full xl:hidden block mt-[30px]">
-                    <i class="fa-solid fa-tv"></i>
-                    <h5 class="main xl:text-[16px] text-[10px] text-center xl:mt-0 mt-3">Bạn</h5>
-                </div>
-
-                <div class="hiddenBarBlock border-t-[1px] mt-4 border-[#3f3f3f] xl:block hidden">
-                    <div
-                        class="text-white rounded-full flex items-center w-[100%] mt-3 overflow-hidden text-[18px] cursor-pointer px-3 hover:bg-[#222222]">
-                        <h5>Bạn</h5>
-                        <h5 class="ms-[20px]">></h5>
-                    </div>
-                    <div
-                        class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
-                        <i class="fa-solid fa-id-card-clip me-[30px]"></i>
-                        <h5 class="">Kênh của bạn</h5>
-                    </div>
-                    <div
-                        class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
-                        <i class="fa-solid fa-clock-rotate-left me-[30px]"></i>
-                        <h5 class="">Video đã xem</h5>
-                    </div>
-                    <div
-                        class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
-                        <i class="fa-solid fa-list me-[30px]"></i>
-                        <h5 class="">Danh sách phát</h5>
-                    </div>
-                    <div
-                        class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
-                        <i class="fa-solid fa-circle-play me-[30px]"></i>
-                        <h5 class="">Video của bạn</h5>
-                    </div>
-                    <div
-                        class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
-                        <i class="fa-regular fa-clock me-[30px]"></i>
-                        <h5 class="">Xem sau</h5>
-                    </div>
-                    <div
-                        class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
-                        <i class="fa-regular fa-thumbs-up me-[30px]"></i>
-                        <h5 class="">Video đã thích</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-            `
     }
 }
 
