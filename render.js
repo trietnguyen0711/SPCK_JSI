@@ -1,5 +1,6 @@
 import { getChannels } from "./auth.js"
 import { toggleBarMain } from "./decoration.js"
+import { searchVideos } from "./function.js"
 import { signPage } from "./sign.js"
 let page = document.querySelector(".page")
 async function renderCloneVideoPage() {
@@ -375,7 +376,7 @@ async function renderHomePage() {
     for (let k = 0; k < listChannels.length; k++) {
         for (let i = 0; i < listChannels[k].videos.length; i++) {
             html += `
-            <div class="w-[400px] cursor-pointer mx-auto videoItem" data-channelId="${k}" data-videoId="${i}">
+            <div class="w-[400px] cursor-pointer mx-auto videoItem" data-channelId="${k}" data-videoId="${listChannels[k].videos[i].id}">
                 <div class="h-[300px] w-full rounded-lg overflow-hidden">
                     <div class="h-[70%] w-[100%] relative overflow-hidden">
                         <img src="${listChannels[k].videos[i].img}" alt="YouTube Thumbnail""
@@ -458,6 +459,90 @@ async function renderLogPage() {
     `
     signPage()
 }
-export { renderVideoPage, renderCloneHomePage, renderHomePage, renderCloneVideoPage, renderLogPage }
+async function renderVideosAcount() {
+    if (document.querySelector(".submitAccount")) {
+        let listChannels = await getChannels()
+        let submitAccount = document.querySelector(".submitAccount")
+        submitAccount.addEventListener("click", () => {
+            let username = localStorage.getItem("username")
+            let positionUsername;
+            for (let i = 0; i < listChannels.length; i++) {
+                if (listChannels[i].email.toLowerCase() == username) {
+                    positionUsername = i;
+                }
+            }
+            let content = document.querySelector(".content")
+            let videos = listChannels[positionUsername].videos
+            content.innerHTML = `
+        <div class=" bg-black px-3 pt-[20px] h-[100vh] ps-auto">
+                <div class=" ms-[30px]">
+                    <div class="flex border-b-[1px] border-[#3f3f3f]">
+                        <div class="w-[150px] h-[150px] rounded-full overflow-hidden">
+                            <img class="w-full h-full"
+                                src="${listChannels[positionUsername].avatar}"
+                                alt="YouTube">
+                        </div>
+                        <div class="text-white ms-[80px]">
+                            <h1 class="font-bold text-[40px]">${listChannels[positionUsername].name}</h1>
+                            <div class="flex">
+                                <p>${listChannels[positionUsername].email}</p>
+                                <p class="ms-3">${listChannels[positionUsername].Subscriber}</p>
+                            </div>
+                            <p class="truncate w-[200px] my-2">Hello everyone kakakakakakakakakakakakakakakaka</p>
+                            <div
+                                class="rounded-full p-3 bg-[#222222] flex-center w-[150px] mb-5 cur-pointer hover:bg-slate-500">
+                                <p>Đăng tải video</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=""></div>
+                </div>
+                <div
+                    class="accountPageVideoList mt-5 bg-black px-3 h-[100vh] grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4 overflow-auto ps-auto">
+
+                </div>
+
+            </div>
+        `
+            let accountPageVideoList = document.querySelector(".accountPageVideoList")
+            let html = ``
+            for (let i = 0; i < videos.length; i++) {
+                html += `
+                <div class="w-[400px] cursor-pointer mx-auto videoItem" data-channelId="${positionUsername}" data-videoId="${videos[i].id}">
+                    <div class="h-[300px] w-full rounded-lg overflow-hidden">
+                        <div class="h-[70%] w-[100%] relative overflow-hidden">
+                            <img src="${videos[i].img}" alt="YouTube Thumbnail""
+                                class="bg-white object-cover object-center w-full h-full" alt="">
+                            <div class="bg-[#616161]  bg-transparent text-white absolute right-[10px] bottom-[10px]">
+                                <p>2:31</p>
+                            </div>
+                            <div class="h-[4px] w-[0%] bg-red-600 absolute bottom-0"></div>
+                        </div>
+                        <div class="h-[30%] w-[100%] py-3 flex">
+                            <div class="rounded-full h-[30px] w-[30px] bg-white me-[15px] overflow-hidden">
+                                <img src="${listChannels[positionUsername].avatar}" alt="YouTube Thumbnail" class="object-cover object-center w-full h-full rounded-full">
+                            </div>
+                            <div class=" w-[250px] text-white">
+                                <p class="line-clamp-2">
+                                ${videos[i].name}
+                                </p>
+                                <p class="w-[100%]">${listChannels[positionUsername].name}</p>
+                                <div class="flex w-[90%]">
+                                    <p>${videos[i].watcher} N người</p>
+                                    <p class="mx-3">-</p>
+                                    <p>${videos[i].date} trước</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `
+            }
+            accountPageVideoList.innerHTML = html
+
+        })
+    }
+}
+export { renderVideoPage, renderCloneHomePage, renderHomePage, renderCloneVideoPage, renderLogPage, renderVideosAcount }
 
 
