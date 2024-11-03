@@ -11,6 +11,8 @@ function signPage() {
     let welcome = document.querySelector(".welcome")
     let sign = document.querySelector(".sign")
     let remember = document.querySelector(".remember")
+    let nameBox = document.querySelector(".nameBox")
+    let inputName = document.querySelector(".inputName")
     let homeSign = document.querySelector(".homeSign").addEventListener("click", () => {
         location.reload()
     })
@@ -21,6 +23,7 @@ function signPage() {
         // Thay đổi thành đăng ký
         errorEmail.innerText = ""
         errorPassword.innerText = ""
+        nameBox.classList.remove("hidden")
         signUpForm.classList.add("hidden")
         welcome.innerHTML = "Sign up now"
         sign.innerHTML = "Create your account"
@@ -97,7 +100,7 @@ function signPage() {
                 // else {
                 //     errorPassword.innerText = "Wrong password. Please try again"
                 // }
-                signUp(inputEmail.value, inputPassword.value)
+                signUp(inputEmail.value, inputPassword.value, inputName.value)
             }
         }
 
@@ -130,6 +133,7 @@ function signPage() {
             errorPassword.innerText = ""
             inputEmail.classList.add("hidden")
             emailNone.classList.add("hidden")
+            nameBox.classList.add("hidden")
             pass.innerHTML = "Confirm your password"
             btn.innerHTML = "Confirm"
             inputPassword.value = ""
