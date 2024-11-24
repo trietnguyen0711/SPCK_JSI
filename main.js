@@ -1,6 +1,6 @@
 
 import { avatarMainPage, logOutMainPage, searchVideos, signInUpMainPage } from "./function.js";
-import { renderCloneHomePage, renderHomePage, renderVideoPage, renderVideosAcount } from "./render.js";
+import { channelsSubscriber, renderCloneHomePage, renderHomePage, renderVideoPage, renderVideosAcount } from "./render.js";
 
 renderCloneHomePage()
 renderHomePage()
@@ -9,3 +9,4 @@ signInUpMainPage()
 logOutMainPage()
 searchVideos()
 renderVideosAcount()
+channelsSubscriber(localStorage.getItem("email"))

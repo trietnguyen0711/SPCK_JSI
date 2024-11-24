@@ -3,6 +3,7 @@ import { avatar, toggleBarMain } from "./decoration.js"
 import { darkLightMode, searchVideos, subscribe } from "./function.js"
 import { signPage } from "./sign.js"
 let page = document.querySelector(".page")
+// Trong quá trình đợi in xong trang video
 async function renderCloneVideoPage() {
     window.scrollTo(0, 0);
     page.innerHTML = `
@@ -50,6 +51,7 @@ async function renderCloneVideoPage() {
     filmsChoice.innerHTML = html
     darkLightMode()
 }
+// Trang video
 async function renderVideoPage(idChannel, idVideo) {
     window.scrollTo(0, 0);
     let listChannels = await getChannels()
@@ -146,6 +148,7 @@ async function renderVideoPage(idChannel, idVideo) {
     });
     darkLightMode()
 }
+// Trong quá trình đợi in xong trang chủ
 async function renderCloneHomePage() {
     window.scrollTo(0, 0);
     page.innerHTML = `
@@ -215,6 +218,7 @@ async function renderCloneHomePage() {
     listFilm.innerHTML = html
     subscribeChannels.innerHTML = html1
 }
+// Trang chủ
 async function renderHomePage() {
     let appearDiv = document.querySelector(".appearDiv")
     appearDiv.innerHTML = ""
@@ -427,24 +431,8 @@ async function renderHomePage() {
             `
         }
     }
-    // Render list of subscribed channels
-    let html1 = ""
-    for (let k = 0; k < listChannels.length; k++) {
-        if (listChannels[k] == "") {
-            continue;
-        }
-        html1 += `
-                <div
-                    class="text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
-                    <div class="rounded-full h-[20px] w-[20px] bg-white me-[30px] overflow-hidden">
-                        <img src="${listChannels[k].avatar}" alt="YouTube Thumbnail" class="object-cover object-center w-full h-full">
-                    </div>
-                    <h5 class="truncate">${listChannels[k].name}</h5>
-                </div>
-        `
-    }
     listFilm.innerHTML = html
-    subscribeChannels.innerHTML = html1
+    channelsSubscriber(localStorage.getItem("email"))
     window.scrollTo(0, 0);
     document.querySelectorAll('.videoItem').forEach(item => {
         item.addEventListener('click', (event) => {
@@ -455,6 +443,7 @@ async function renderHomePage() {
     });
     darkLightMode()
 }
+// Trang đăng ký đang nhập
 async function renderLogPage() {
     window.scrollTo(0, 0);
     let body = document.querySelector("body")
@@ -494,22 +483,30 @@ async function renderLogPage() {
     darkLightMode()
     window.scrollTo(0, 0);
 }
+// Trang tài khoản
 async function renderVideosAcount() {
     window.scrollTo(0, 0);
     if (document.querySelector(".submitAccount")) {
-        let listChannels = await getChannels()
         let submitAccount = document.querySelector(".submitAccount")
         submitAccount.addEventListener("click", () => {
-            let email = localStorage.getItem("email")
-            let positionemail;
-            for (let i = 0; i < listChannels.length; i++) {
-                if (listChannels[i].email.toLowerCase() == email) {
-                    positionemail = i;
-                }
-            }
-            let page = document.querySelector(".page")
-            let videos = listChannels[positionemail].videos
-            page.innerHTML = `
+            renderVideosAcountCode(localStorage.getItem("email"))
+        })
+    }
+    darkLightMode()
+}
+async function renderVideosAcountCode(email) {
+    let listChannels = await getChannels()
+    let positionemail;
+    let emailCurrent = localStorage.getItem("email")
+    for (let i = 0; i < listChannels.length; i++) {
+        if (listChannels[i].email.toLowerCase() == email) {
+            positionemail = i;
+        }
+    }
+    let page = document.querySelector(".page")
+    let videos = listChannels[positionemail].videos
+    if (emailCurrent == email) {
+        page.innerHTML = `
         <div class="h-[70px] "></div>
         <div class=" bg-black px-3 pt-[20px] h-[100vh] ps-auto w-[85%] mx-auto">
                 <div class=" ms-[30px]">
@@ -536,67 +533,96 @@ async function renderVideosAcount() {
                 </div>
                 <div
                     class="accountPageVideoList mt-5 bg-black px-3 h-[100vh] grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4  ps-auto">
-
+    
                 </div>
-
+    
             </div>
         `
-            let accountPageVideoList = document.querySelector(".accountPageVideoList")
-            renderUploadPage()
-            let html = ``
-            if (videos.length == 0) {
-                alert("Bạn chưa đăng tải bất kì video nào!")
-                return 0;
-            }
-            for (let i = 0; i < videos.length; i++) {
-                if (videos[i] == "") {
-                    continue;
-                }
-                html += `
-                <div class="w-[400px] cursor-pointer mx-auto videoItem" data-channelId="${positionemail}" data-videoId="${videos[i].id}">
-                    <div class="h-[300px] w-full rounded-lg overflow-hidden">
-                        <div class="h-[70%] w-[100%] relative overflow-hidden">
-                            <img src="${videos[i].img}" alt="YouTube Thumbnail""
-                                class="bg-white object-cover object-center w-full h-full" alt="">
-                            <div class="bg-[#616161]  bg-transparent text-white absolute right-[10px] bottom-[10px]">
-                                
-                            </div>
-                            <div class="h-[4px] w-[0%] bg-red-600 absolute bottom-0"></div>
+    }
+    else {
+        page.innerHTML = `
+        <div class="h-[70px] "></div>
+        <div class=" bg-black px-3 pt-[20px] h-[100vh] ps-auto w-[85%] mx-auto">
+                <div class=" ms-[30px]">
+                    <div class="flex border-b-[1px] border-[#3f3f3f]">
+                        <div class="w-[150px] h-[150px] rounded-full overflow-hidden">
+                            <img class="w-full h-full"
+                                src="${listChannels[positionemail].avatar}"
+                                alt="YouTube">
                         </div>
-                        <div class="h-[30%] w-[100%] py-3 flex">
-                            <div class="rounded-full h-[30px] w-[30px] bg-white me-[15px] overflow-hidden">
-                                <img src="${listChannels[positionemail].avatar}" alt="YouTube Thumbnail" class="object-cover object-center w-full h-full rounded-full">
+                        <div class="text-white ms-[80px]">
+                            <h1 class="font-bold text-[40px]">${listChannels[positionemail].name}</h1>
+                            <div class="flex">
+                                <p>${listChannels[positionemail].email}</p>
+                                <p class="ms-3">${listChannels[positionemail].Subscriber}</p>
                             </div>
-                            <div class=" w-[250px] text-white">
-                                <p class="line-clamp-2">
-                                ${videos[i].name}
-                                </p>
-                                <p class="w-[100%]">${listChannels[positionemail].name}</p>
-                                <div class="flex w-[90%]">
-                                    <p>${videos[i].watcher} người</p>
-                                    <p class="mx-3">-</p>
-                                    <p>${videos[i].date} trước</p>
-                                </div>
+                            <p class="truncate w-[200px] my-2">Hello everyone kakakakakakakakakakakakakakakaka</p>
+                        </div>
+                    </div>
+                    <div class=""></div>
+                </div>
+                <div
+                    class="accountPageVideoList mt-5 bg-black px-3 h-[100vh] grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4  ps-auto">
+    
+                </div>
+    
+            </div>
+        `
+    }
+    let accountPageVideoList = document.querySelector(".accountPageVideoList")
+    renderUploadPage()
+    let html = ``
+    if (videos.length == 0) {
+        alert("Bạn chưa đăng tải bất kì video nào!")
+        return 0;
+    }
+    for (let i = 0; i < videos.length; i++) {
+        if (videos[i] == "") {
+            continue;
+        }
+        html += `
+            <div class="w-[400px] cursor-pointer mx-auto videoItem" data-channelId="${positionemail}" data-videoId="${videos[i].id}">
+                <div class="h-[300px] w-full rounded-lg overflow-hidden">
+                    <div class="h-[70%] w-[100%] relative overflow-hidden">
+                        <img src="${videos[i].img}" alt="YouTube Thumbnail""
+                            class="bg-white object-cover object-center w-full h-full" alt="">
+                        <div class="bg-[#616161]  bg-transparent text-white absolute right-[10px] bottom-[10px]">
+                            
+                        </div>
+                        <div class="h-[4px] w-[0%] bg-red-600 absolute bottom-0"></div>
+                    </div>
+                    <div class="h-[30%] w-[100%] py-3 flex">
+                        <div class="rounded-full h-[30px] w-[30px] bg-white me-[15px] overflow-hidden">
+                            <img src="${listChannels[positionemail].avatar}" alt="YouTube Thumbnail" class="object-cover object-center w-full h-full rounded-full">
+                        </div>
+                        <div class=" w-[250px] text-white">
+                            <p class="line-clamp-2">
+                            ${videos[i].name}
+                            </p>
+                            <p class="w-[100%]">${listChannels[positionemail].name}</p>
+                            <div class="flex w-[90%]">
+                                <p>${videos[i].watcher} người</p>
+                                <p class="mx-3">-</p>
+                                <p>${videos[i].date} trước</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                `
-            }
-            window.scrollTo(0, 0);
-            accountPageVideoList.innerHTML = html
-            document.querySelectorAll('.videoItem').forEach(item => {
-                item.addEventListener('click', () => {
-                    renderCloneVideoPage();
-                    renderVideoPage(item.getAttribute("data-channelId"), item.getAttribute("data-videoId"));
-                    toggleBarMain()
-                    window.scrollTo(0, 0);
-                });
-            });
-        })
+            </div>
+            `
     }
-    darkLightMode()
+    window.scrollTo(0, 0);
+    accountPageVideoList.innerHTML = html
+    document.querySelectorAll('.videoItem').forEach(item => {
+        item.addEventListener('click', () => {
+            renderCloneVideoPage();
+            renderVideoPage(item.getAttribute("data-channelId"), item.getAttribute("data-videoId"));
+            toggleBarMain()
+            window.scrollTo(0, 0);
+        });
+    });
 }
+// Trang đăng tải video
 async function renderUploadPage() {
     window.scrollTo(0, 0);
     let listChannels = await getChannels()
@@ -680,6 +706,45 @@ async function renderUploadPage() {
     })
     darkLightMode()
 }
-export { renderUploadPage, renderVideoPage, renderCloneHomePage, renderHomePage, renderCloneVideoPage, renderLogPage, renderVideosAcount }
+async function channelsSubscriber(email) {
+    let listChannels = await getChannels()
+    let listSubscribeChannels
+    for (let i = 0; i < listChannels.length; i++) {
+        if (listChannels[i].email == email) {
+            listSubscribeChannels = listChannels[i].channelsSubscriber
+            break;
+        }
+    }
+    let subscribeChannels = document.querySelector(".subscribeChannels")
+    let html = ""
+    for (let i = 0; i < listSubscribeChannels.length; i++) {
+        if (listSubscribeChannels[i] == "") {
+            continue;
+        }
+        html += `
+                <div
+                    class="sub text-white flex items-center w-[100%] mt-3 overflow-hidden cursor-pointer px-3 py-1  hover:bg-[#222222] rounded-full  ">
+                    <div class="rounded-full h-[20px] w-[20px] bg-white me-[30px] overflow-hidden">
+                        <img src="${listSubscribeChannels[i].avatar}" alt="YouTube Thumbnail" class="object-cover object-center w-full h-full">
+                    </div>
+                    <h5 class="truncate">${listSubscribeChannels[i].name}</h5>
+                </div>
+        `
+    }
+    subscribeChannels.innerHTML = html
+    document.querySelectorAll('.sub').forEach((item, index) => {
+        item.addEventListener('click', () => {
+            let email;
+            for (let i = 0; i < listChannels.length; i++) {
+                if (listChannels[i].name === listSubscribeChannels[index + 1].name) {
+                    email = listChannels[i].email;
+                    break;
+                }
+            }
+            renderVideosAcountCode(email);
+        });
+    });
+}
+export { renderUploadPage, renderVideoPage, channelsSubscriber, renderCloneHomePage, renderHomePage, renderCloneVideoPage, renderLogPage, renderVideosAcount }
 
 

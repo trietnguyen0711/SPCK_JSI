@@ -1,4 +1,4 @@
-import { getChannels, signIn, getUserIdByEmail } from "./auth.js";
+import { getChannels, signIn, getUserIdByEmail, updateSubcribers, updateChannelSubcribe } from "./auth.js";
 import { avatar, toggleBarMain } from "./decoration.js";
 import { renderCloneVideoPage, renderCloneHomePage, renderHomePage, renderLogPage, renderVideoPage, renderVideosAcount } from "./render.js";
 function avatarMainPage() {
@@ -335,8 +335,21 @@ async function subscribe(currentChannelName) {
     btnSubcribe.addEventListener("click", async () => {
         if (localStorage.getItem("email")) {
             // Logic xử lý khi đã đăng nhập
-            // TH1: Chưa đăng ký
-            // TH2: Đã đăng ký
+            for (let i = 0; i < channelsSubscriber.length; i++) {
+                // TH1: Đã đăng ký
+                if (channelsSubscriber[i].name == currentChannelName) {
+                    alert("Đã đăng ký kênh này !")
+                    return;
+                }
+            }
+            // TH2: Chưa đăng ký
+            for (let i = 0; i < listChannels.length; i++) {
+                if (listChannels[i].name == currentChannelName) {
+                    updateSubcribers(listChannels[i].email)
+                    updateChannelSubcribe(localStorage.getItem("email"), currentChannelName, listChannels[i].avatar)
+                }
+            }
+            textSubcribe.innerHTML = "Đã Đăng ký";
         } else {
             alert("Vui lòng đăng nhập !");
         }

@@ -17,6 +17,7 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 // Khởi tạo realtime database
 import { getDatabase, ref, set, update, remove, orderByChild, get, query, equalTo } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+import { avatar } from "./decoration.js";
 const database = getDatabase(app);
 // Sử dụng hàm
 const signUp = async (email, password, name) => {
@@ -33,12 +34,13 @@ const signUp = async (email, password, name) => {
             videos: [""],
             channelsSubscriber: [""],
         });
-        alert("successfully sign up" + " " + user.email);
+        alert("Đăng ký thành công" + " " + user.email);
         localStorage.setItem("email", user.email);
         location.reload();
     } catch (error) {
         console.error(error); // In ra lỗi để chẩn đoán
-        alert("Fail to sign up! Please try again !");
+        alert("Đăng ký thất bại ! Vui lòng đăng ký lại" + ".Lỗi : " + error);
+        location.reload();
     }
 };
 
@@ -46,7 +48,7 @@ const signIn = async (email, password) => {
     try {
         const result = await signInWithEmailAndPassword(auth, email, password)
         const userName = await result.user
-        alert("successfully sign in" + " " + userName.email)
+        alert("Chào mừng" + " " + userName.email)
         localStorage.setItem("email", userName.email)
         location.reload()
     }
@@ -132,7 +134,7 @@ async function uploadVideo(email, videosUpload) {
         location.reload()
     }
 }
-
+// Hàm cập nhật số lượng người xem mỗi video
 async function updateNumberWatchers(email, idVideo) {
     const userId = await getUserIdByEmail(email); // Lấy ID của user từ email
 
@@ -172,5 +174,68 @@ async function updateNumberWatchers(email, idVideo) {
         location.reload();
     }
 }
+// Hàm cập nhật "số lượng người đăng ký" của một kênh
+async function updateSubcribers(email) {
+    const userId = await getUserIdByEmail(email); // Lấy ID của user từ email
 
-export { getChannels, signUp, signIn, uploadVideo, updateNumberWatchers, getUserIdByEmail }
+    if (userId) { // Nếu tìm thấy user
+        const userRef = ref(database, "users/" + userId); // Tham chiếu tới user
+
+        // Lấy dữ liệu hiện tại
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                let Subscriber = parseInt(userData.Subscriber) || 0;
+                // Tăng lượt đăng ký
+                Subscriber += 1;
+
+                // Cập nhật lại dữ liệu
+                update(userRef, {
+                    Subscriber: Subscriber
+                }).then(() => {
+                }).catch((error) => {
+                    alert("Lỗi hệ thống khi cập nhật:", error);
+                });
+            } else {
+                alert("Không có dữ liệu cho user này.");
+            }
+        }).catch((error) => {
+            alert("Lỗi khi lấy dữ liệu:", error);
+        });
+    } else {
+        alert("Lỗi hệ thống: Không tìm thấy user.");
+        location.reload();
+    }
+}
+// Hàm cập nhật "những kênh đã đăng ký" của một kênh
+async function updateChannelSubcribe(email, currentChannelName, currentChannelAvatar) {
+    const userId = await getUserIdByEmail(email)
+    if (userId) {
+        const userRef = ref(database, "users/" + userId)
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const userData = snapshot.val()
+                let channelsSubscriber = userData.channelsSubscriber || []
+
+                // Thêm kênh mới vào danh sách
+                channelsSubscriber.push({
+                    name: currentChannelName,
+                    avatar: currentChannelAvatar
+                })
+
+                // Cập nhật lại danh sách trên database
+                update(userRef, { channelsSubscriber }).then(() => {
+                    alert("Đăng ký thành công!")
+                }).catch((error) => {
+                    alert("Lỗi khi cập nhật dữ liệu:", error)
+                })
+            }
+        }).catch((error) => {
+            alert("Lỗi khi lấy dữ liệu:", error);
+        })
+    } else {
+        alert("Lỗi hệ thống: Không tìm thấy user.");
+        location.reload();
+    }
+}
+export { getChannels, signUp, signIn, uploadVideo, updateNumberWatchers, getUserIdByEmail, updateSubcribers, updateChannelSubcribe }
